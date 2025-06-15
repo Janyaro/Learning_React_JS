@@ -1,24 +1,29 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Navbar from './components/Navbar';
+import News from './components/News';
 
 function App() {
+let [mode , setMode] = useState("black")
+
+const toogleMode = () =>{
+  if(mode === "black"){
+    setMode("white");
+  console.log('Toogle mode update')
+  }
+  else{
+    setMode("black");
+  }
+}
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   
+   <div style={{
+    backgroundColor:mode === "black" ? "white" : "black",
+    color:mode === "black"?"white" : "black"
+   }}>
+   <Navbar toogleMode={toogleMode} mode={mode} title="Navigation"/>
+   <News mode={mode}/>
+   </div>
   );
 }
 
