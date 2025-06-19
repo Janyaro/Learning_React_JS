@@ -8,7 +8,8 @@ name:{
 },
 email:{
 type: String,
-required:true
+required:true,
+unique:true
 },
 password:{
 type:String,
@@ -19,5 +20,5 @@ timeStamp:{
     default:Date.now
 }
 })
-
-module.exports = mongoose.model("User", UserSchema)
+const User = mongoose.model("User", UserSchema);
+module.exports = User;
