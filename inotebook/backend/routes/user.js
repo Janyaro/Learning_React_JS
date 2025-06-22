@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const jwt_secret = "mynameiswaseemjanyaro";
-
+const fetchuser = require("../middleware/fetchuser");
 
 // post request for create the user /user/createUser
 router.post('/',  [
@@ -48,12 +48,12 @@ router.post('/',  [
       id:user.id
     }
   }
-
+   // generate the Jwt token 
   const token = jwt.sign(data , jwt_secret);
    
   res.json({token})
 } catch (error) {
-    res.json(error)
+    res.status(400).json(error);
   }
 
     
@@ -64,10 +64,13 @@ router.post('/',  [
 router.post('/login',[
   body('email').isEmail(),
   body('password').exists()
-] ,async (req,res)=>{
+],
+async (req,res)=>{
 const error = validationResult(req);
 if(!error.isEmpty()){
-
+  return res.status(400).json({
+    error:error.array()
+  })
 }
 const {email , password} = req.body;
 try {
@@ -89,22 +92,42 @@ try {
     id:user.id
     }
   }
+  console.log("User will add successfully")
 
   const token = jwt.sign(data , jwt_secret);
   console.log(token);
-  res.json({
+  res.status(200).json({
     token ,
    msg:"the login api will hit successfully"
 
    })
    
 } catch (error) {
-  
+  console.log("error will occur in the code ");
 }
 })
+// get a detail of specific user
 
+router.post('/getUser',fetchuser,async (req,res)=>{
+   try {
+    const userId = req.user.id;
+    const user =await  User.findById(userId).select('-password');
+     res.send(user);
+     } catch (error) {
+    res.status(400).send({"error":error});
+   }
+})
+// list of all connected user
 
-
+router.get('/allUser',async (req,res)=>{
+  try {
+    const user = await User.find();
+    res.status(200).json(user);
+    console.log("no user available here please first add");
+  } catch (error) {
+    res.status(400).json(`Error will occur ${error}`)
+  }
+})
 
 
 module.exports = router;
