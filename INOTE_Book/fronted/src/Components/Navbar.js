@@ -1,6 +1,14 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import  React, { useEffect } from 'react'
+import { Link  , useLocation} from 'react-router-dom';
 export default function Navbar() {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // Google Analytics]
+    console.log(location.pathname)
+  }, [location]);
+
+
   return (
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
   <div className="container-fluid">
@@ -11,10 +19,10 @@ export default function Navbar() {
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav me-auto mb-2 mb-lg-0">
         <li className="nav-item">
-          <Link className="nav-link active" aria-current="page" to="/home">Home</Link>
+          <Link className={`nav-link ${location.pathname==="/home" ? "active" : "" }`}  aria-current="page" to="/home">Home</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="/user">User</Link>
+          <Link className={`nav-link ${location.pathname==="/user" ? "active" : "" }`} to="/user">User</Link>
         </li>
 
       </ul>
